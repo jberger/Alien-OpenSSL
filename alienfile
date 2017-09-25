@@ -7,14 +7,16 @@ plugin 'PkgConfig' => (
 share {
   plugin 'Download' => (
     url => 'https://www.openssl.org/source/index.html',
-    match => qr/^openssl-[0-9\.]+[a-z]*\.tar\.gz$/,
+    filter => qr/^openssl-[0-9\.]+[a-z]*\.tar\.gz$/,
     version => qr/^openssl-([0-9\.]+[a-z]*)\.tar\.gz$/,
   );
   plugin 'Extract' => 'tar.gz';
-  plugin 'Build::Autoconf' => (with_pic => 0);
+  plugin 'Build::MSYS';
+
   build [
-    '%{configure} no-shared cc',
+    '%{perl} Configure --prefix=%{.install.prefix} no-shared cc',
     '%{make}',
     '%{make} install',
   ];
+
 };
